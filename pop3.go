@@ -32,9 +32,9 @@ func (e *Error) Error() string {
 	return fmt.Sprintf("pop3: %s: %s\n", e.Err.Error(), e.Response)
 }
 
-func Dial(addr string) (c *Client, err error) {
+func Dial(address string) (c *Client, err error) {
 
-	conn, err := net.Dial("tcp", addr)
+	conn, err := net.Dial("tcp", address)
 	if err != nil {
 
 		return
@@ -43,9 +43,9 @@ func Dial(addr string) (c *Client, err error) {
 	return NewClient(conn)
 }
 
-func DialTLS(addr string) (c *Client, err error) {
+func DialTLS(address string) (c *Client, err error) {
 
-	conn, err := tls.Dial("tcp", addr, nil)
+	conn, err := tls.Dial("tcp", address, nil)
 	if err != nil {
 
 		return

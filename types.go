@@ -3,13 +3,9 @@ package pop3
 import (
 	"bufio"
 	"io"
-	"net"
 )
 
 type Client struct {
-
-	// Pluggable Dialer
-	Dial func(network, addr string) (net.Conn, error)
 
 	// Net Conn
 	conn io.ReadWriteCloser
