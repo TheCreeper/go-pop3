@@ -26,7 +26,7 @@ func main() {
 	}
 
 	// Authenticate with the server
-	if err = c.Auth("test", "test"); err != nil {
+	if err = c.Auth("username", "password"); err != nil {
 
 		log.Fatal(err)
 	}
