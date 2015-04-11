@@ -12,7 +12,6 @@ import (
 	"strings"
 )
 
-// Some errors
 var (
 	ErrServerNotReady = errors.New("Server did not respond with +OK on the initial connection")
 	ErrBadCommand     = errors.New("Server did not respond with +OK after sending a command")
@@ -54,7 +53,7 @@ func DialTLS(address string) (c *Client, err error) {
 	return NewClient(conn)
 }
 
-func NewClient(conn io.ReadWriteCloser) (c *Client, err error) {
+func NewClient(conn net.Conn) (c *Client, err error) {
 
 	c = &Client{
 
@@ -64,7 +63,7 @@ func NewClient(conn io.ReadWriteCloser) (c *Client, err error) {
 	}
 
 	// Make sure we receive the server greeting
-	line, err := c.ReadLine()
+	line, err := c.readLine()
 	if err != nil {
 
 		return
@@ -77,7 +76,7 @@ func NewClient(conn io.ReadWriteCloser) (c *Client, err error) {
 	return
 }
 
-func (c *Client) ReadLine() (line string, err error) {
+func (c *Client) readLine() (line string, err error) {
 
 	b, _, err := c.r.ReadLine()
 	if err == io.EOF {
@@ -93,11 +92,11 @@ func (c *Client) ReadLine() (line string, err error) {
 	return
 }
 
-func (c *Client) ReadLines() (lines []string, err error) {
+func (c *Client) readLines() (lines []string, err error) {
 
 	for {
 
-		line, err := c.ReadLine()
+		line, err := c.readLine()
 		if err != nil {
 
 			return nil, err
@@ -140,7 +139,7 @@ func (c *Client) Cmd(format string, args ...interface{}) (line string, err error
 		return
 	}
 
-	line, err = c.ReadLine()
+	line, err = c.readLine()
 	if err != nil {
 
 		return
@@ -271,7 +270,7 @@ func (c *Client) ListAll() (list []MessageList, err error) {
 		return
 	}
 
-	lines, err := c.ReadLines()
+	lines, err := c.readLines()
 	if err != nil {
 
 		return
@@ -312,7 +311,7 @@ func (c *Client) Retr(msg int) (m *mail.Message, err error) {
 
 	// mail.ReadMessage does not consume the message end dot in the buffer
 	// so we must move the buffer along. Need to find a better way of doing this.
-	line, err := c.ReadLine()
+	line, err := c.readLine()
 	if err != nil {
 
 		return
@@ -378,7 +377,7 @@ func (c *Client) Top(msg int, n int) (m *mail.Message, err error) {
 
 	// mail.ReadMessage does not consume the message end dot in the buffer
 	// so we must move the buffer along. Need to find a better way of doing this.
-	line, err := c.ReadLine()
+	line, err := c.readLine()
 	if err != nil {
 
 		return
@@ -420,7 +419,7 @@ func (c *Client) UidlAll() (list []MessageUidl, err error) {
 		return
 	}
 
-	lines, err := c.ReadLines()
+	lines, err := c.readLines()
 	if err != nil {
 
 		return
