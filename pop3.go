@@ -68,7 +68,7 @@ func NewClient(conn net.Conn) (c *Client, err error) {
 	}
 
 	// Make sure we receive the server greeting
-	line, err := c.readLine()
+	line, err := c.ReadLine()
 	if err != nil {
 
 		return
@@ -81,7 +81,7 @@ func NewClient(conn net.Conn) (c *Client, err error) {
 	return
 }
 
-func (c *Client) readLine() (line string, err error) {
+func (c *Client) ReadLine() (line string, err error) {
 
 	b, _, err := c.r.ReadLine()
 	if err == io.EOF {
@@ -97,11 +97,11 @@ func (c *Client) readLine() (line string, err error) {
 	return
 }
 
-func (c *Client) readLines() (lines []string, err error) {
+func (c *Client) ReadLines() (lines []string, err error) {
 
 	for {
 
-		line, err := c.readLine()
+		line, err := c.ReadLine()
 		if err != nil {
 
 			return nil, err
@@ -144,7 +144,7 @@ func (c *Client) Cmd(format string, args ...interface{}) (line string, err error
 		return
 	}
 
-	line, err = c.readLine()
+	line, err = c.ReadLine()
 	if err != nil {
 
 		return
@@ -181,14 +181,13 @@ func (c *Client) Pass(p string) (err error) {
 
 func (c *Client) Quit() (err error) {
 
-	// Send the server a QUIT message
 	err = c.Send("%s\r\n", QUIT)
 	if err != nil {
 
 		return
 	}
 
-	// Close the socket
+	// Close the socket after we went the quit message
 	return c.conn.Close()
 }
 
@@ -275,7 +274,7 @@ func (c *Client) ListAll() (list []MessageList, err error) {
 		return
 	}
 
-	lines, err := c.readLines()
+	lines, err := c.ReadLines()
 	if err != nil {
 
 		return
@@ -316,7 +315,7 @@ func (c *Client) Retr(msg int) (m *mail.Message, err error) {
 
 	// mail.ReadMessage does not consume the message end dot in the buffer
 	// so we must move the buffer along. Need to find a better way of doing this.
-	line, err := c.readLine()
+	line, err := c.ReadLine()
 	if err != nil {
 
 		return
@@ -382,7 +381,7 @@ func (c *Client) Top(msg int, n int) (m *mail.Message, err error) {
 
 	// mail.ReadMessage does not consume the message end dot in the buffer
 	// so we must move the buffer along. Need to find a better way of doing this.
-	line, err := c.readLine()
+	line, err := c.ReadLine()
 	if err != nil {
 
 		return
@@ -424,7 +423,7 @@ func (c *Client) UidlAll() (list []MessageUidl, err error) {
 		return
 	}
 
-	lines, err := c.readLines()
+	lines, err := c.ReadLines()
 	if err != nil {
 
 		return

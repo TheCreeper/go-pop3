@@ -1,29 +1,8 @@
 package pop3
 
 import (
-	"net"
 	"strings"
 )
-
-func LookupMailServer(addr string) (string, error) {
-
-	host, port, err := net.SplitHostPort(addr)
-	if err != nil {
-
-		return "", err
-	}
-
-	mxs, err := net.LookupMX(host)
-	if err != nil {
-
-		return "", err
-	}
-	if len(mxs) == 0 {
-
-		return "", err
-	}
-	return net.JoinHostPort(mxs[0].Host, port), nil
-}
 
 func IsOK(s string) bool {
 
