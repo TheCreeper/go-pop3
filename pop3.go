@@ -57,7 +57,7 @@ func DialTLS(address string) (c *Client, err error) {
 	return NewClient(conn)
 }
 
-// NewClient returns a new client.
+// NewClient returns a new client object using an existing connection.
 func NewClient(conn net.Conn) (c *Client, err error) {
 
 	c = &Client{
@@ -157,6 +157,7 @@ func (c *Client) Cmd(format string, args ...interface{}) (line string, err error
 	return
 }
 
+// User sends the username to the server.
 func (c *Client) User(u string) (err error) {
 
 	_, err = c.Cmd("%s %s\r\n", USER, u)
@@ -168,6 +169,7 @@ func (c *Client) User(u string) (err error) {
 	return
 }
 
+// Pass sends the password to the server.
 func (c *Client) Pass(p string) (err error) {
 
 	_, err = c.Cmd("%s %s\r\n", PASS, p)
@@ -179,6 +181,7 @@ func (c *Client) Pass(p string) (err error) {
 	return
 }
 
+// Quit sends the quit command to the server and closes the socket.
 func (c *Client) Quit() (err error) {
 
 	err = c.Send("%s\r\n", QUIT)
@@ -187,10 +190,11 @@ func (c *Client) Quit() (err error) {
 		return
 	}
 
-	// Close the socket after we went the quit message
 	return c.conn.Close()
 }
 
+// Auth sends the username and password to the server using the User and Pass methods.
+// Noop is also called incase the server does not respond with invalid auth.
 func (c *Client) Auth(u, p string) (err error) {
 
 	err = c.User(u)
@@ -210,6 +214,7 @@ func (c *Client) Auth(u, p string) (err error) {
 	return c.Noop()
 }
 
+// Stat retreives a listing for the current maildrop, consisting of the number of messages and the total size of the maildrop.
 func (c *Client) Stat() (count, size int, err error) {
 
 	line, err := c.Cmd("%s\r\n", STAT)
@@ -243,6 +248,7 @@ func (c *Client) Stat() (count, size int, err error) {
 	return
 }
 
+// List returns the MessageList object which contains the message non unique id and its size.
 func (c *Client) List(msg int) (list MessageList, err error) {
 
 	line, err := c.Cmd("%s %s\r\n", LIST, msg)
@@ -266,6 +272,7 @@ func (c *Client) List(msg int) (list MessageList, err error) {
 	return MessageList{id, size}, nil
 }
 
+// ListAll returns a MessageList object which contains all messages in the maildrop.
 func (c *Client) ListAll() (list []MessageList, err error) {
 
 	_, err = c.Cmd("%s\r\n", LIST)
@@ -299,6 +306,7 @@ func (c *Client) ListAll() (list []MessageList, err error) {
 	return
 }
 
+// Retr downloads the given message and returns it as a mail.Message object.
 func (c *Client) Retr(msg int) (m *mail.Message, err error) {
 
 	_, err = c.Cmd("%s %s\r\n", RETR, msg)
@@ -332,6 +340,7 @@ func (c *Client) Retr(msg int) (m *mail.Message, err error) {
 	return
 }
 
+// Dele will delete the given message from the maildrop. Changes will only take affect after the Quit command is issued.
 func (c *Client) Dele(msg int) (err error) {
 
 	_, err = c.Cmd("%s %s\r\n", DELE, msg)
@@ -343,6 +352,7 @@ func (c *Client) Dele(msg int) (err error) {
 	return
 }
 
+// Noop will do nothing however can prolong the end of a connection.
 func (c *Client) Noop() (err error) {
 
 	_, err = c.Cmd("%s\r\n", NOOP)
@@ -354,6 +364,7 @@ func (c *Client) Noop() (err error) {
 	return
 }
 
+// Rset will unmark any messages that have being marked for deletion in the current session.
 func (c *Client) Rset() (err error) {
 
 	_, err = c.Cmd("%s\r\n", RSET)
@@ -365,6 +376,7 @@ func (c *Client) Rset() (err error) {
 	return
 }
 
+// Top will return a varible number of lines for a given message as a mail.Message object.
 func (c *Client) Top(msg int, n int) (m *mail.Message, err error) {
 
 	_, err = c.Cmd("%s %d %d\r\n", TOP, msg, n)
@@ -398,6 +410,7 @@ func (c *Client) Top(msg int, n int) (m *mail.Message, err error) {
 	return
 }
 
+// Uidl will return a MessageUidl object which contains the message non unique id and a unique id.
 func (c *Client) Uidl(msg int) (list MessageUidl, err error) {
 
 	line, err := c.Cmd("%s %s\r\n", UIDL, msg)
@@ -415,6 +428,7 @@ func (c *Client) Uidl(msg int) (list MessageUidl, err error) {
 	return MessageUidl{id, strings.Fields(line)[2]}, nil
 }
 
+// UidlAll will return a MessageUidl object which contains all message in the maildrop.
 func (c *Client) UidlAll() (list []MessageUidl, err error) {
 
 	_, err = c.Cmd("%s\r\n", UIDL)
