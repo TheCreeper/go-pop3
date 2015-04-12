@@ -17,6 +17,7 @@ var (
 	ErrBadCommand     = errors.New("Server did not respond with +OK after sending a command")
 )
 
+// Error represents an Error reported in the POP3 session.
 type Error struct {
 
 	// The reply sent by the server
@@ -26,11 +27,13 @@ type Error struct {
 	Err error
 }
 
+// Error returns a string representation of the POP3 error
 func (e *Error) Error() string {
 
 	return fmt.Sprintf("pop3: %s: %s\n", e.Err.Error(), e.Response)
 }
 
+// Dial connects to the address on the named network.
 func Dial(address string) (c *Client, err error) {
 
 	conn, err := net.Dial("tcp", address)
@@ -42,6 +45,7 @@ func Dial(address string) (c *Client, err error) {
 	return NewClient(conn)
 }
 
+// Dial connects to the address on the named network using tls.
 func DialTLS(address string) (c *Client, err error) {
 
 	conn, err := tls.Dial("tcp", address, nil)
@@ -53,6 +57,7 @@ func DialTLS(address string) (c *Client, err error) {
 	return NewClient(conn)
 }
 
+// NewClient returns a new client.
 func NewClient(conn net.Conn) (c *Client, err error) {
 
 	c = &Client{

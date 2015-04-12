@@ -2,13 +2,13 @@ package pop3
 
 import (
 	"bufio"
-	"io"
+	"net"
 )
 
 type Client struct {
 
 	// Net Conn
-	conn io.ReadWriteCloser
+	conn net.Conn
 
 	// Read Buffer
 	r *bufio.Reader
