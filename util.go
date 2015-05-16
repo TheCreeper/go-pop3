@@ -1,8 +1,6 @@
 package pop3
 
-import (
-	"strings"
-)
+import "strings"
 
 func IsOK(s string) bool {
 

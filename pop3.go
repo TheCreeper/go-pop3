@@ -81,6 +81,7 @@ func NewClient(conn net.Conn) (c *Client, err error) {
 	return
 }
 
+// ReadLine reads a single line from the buffer.
 func (c *Client) ReadLine() (line string, err error) {
 
 	b, _, err := c.r.ReadLine()
@@ -97,6 +98,7 @@ func (c *Client) ReadLine() (line string, err error) {
 	return
 }
 
+// ReadLines reads from the buffer until it hits the message end dot (".").
 func (c *Client) ReadLines() (lines []string, err error) {
 
 	for {
@@ -119,6 +121,7 @@ func (c *Client) ReadLines() (lines []string, err error) {
 	return
 }
 
+// Send writes a command to the buffer and flushes it. Does not return any lines from the buffer.
 func (c *Client) Send(format string, args ...interface{}) (err error) {
 
 	_, err = c.w.WriteString(fmt.Sprintf(format, args...))
@@ -136,6 +139,7 @@ func (c *Client) Send(format string, args ...interface{}) (err error) {
 	return
 }
 
+// Cmd sends a command to the server and returns a single line from the buffer.
 func (c *Client) Cmd(format string, args ...interface{}) (line string, err error) {
 
 	err = c.Send(format, args...)
@@ -151,7 +155,7 @@ func (c *Client) Cmd(format string, args ...interface{}) (line string, err error
 	}
 	if !IsOK(line) {
 
-		return "", &Error{string(line), ErrBadCommand}
+		return "", &Error{line, ErrBadCommand}
 	}
 
 	return
@@ -214,7 +218,8 @@ func (c *Client) Auth(u, p string) (err error) {
 	return c.Noop()
 }
 
-// Stat retreives a listing for the current maildrop, consisting of the number of messages and the total size of the maildrop.
+// Stat retreives a listing for the current maildrop,
+// consisting of the number of messages and the total size of the maildrop.
 func (c *Client) Stat() (count, size int, err error) {
 
 	line, err := c.Cmd("%s\r\n", STAT)
@@ -340,7 +345,8 @@ func (c *Client) Retr(msg int) (m *mail.Message, err error) {
 	return
 }
 
-// Dele will delete the given message from the maildrop. Changes will only take affect after the Quit command is issued.
+// Dele will delete the given message from the maildrop.
+// Changes will only take affect after the Quit command is issued.
 func (c *Client) Dele(msg int) (err error) {
 
 	_, err = c.Cmd("%s %s\r\n", DELE, msg)
@@ -428,7 +434,7 @@ func (c *Client) Uidl(msg int) (list MessageUidl, err error) {
 	return MessageUidl{id, strings.Fields(line)[2]}, nil
 }
 
-// UidlAll will return a MessageUidl object which contains all message in the maildrop.
+// UidlAll will return a MessageUidl object which contains all messages in the maildrop.
 func (c *Client) UidlAll() (list []MessageUidl, err error) {
 
 	_, err = c.Cmd("%s\r\n", UIDL)
