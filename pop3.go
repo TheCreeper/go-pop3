@@ -29,7 +29,7 @@ type Error struct {
 	Err error
 }
 
-// Error returns a string representation of the POP3 error
+// Error returns a string representation of the POP3 error.
 func (e *Error) Error() string {
 
 	return fmt.Sprintf("pop3: %s: %s\n", e.Err.Error(), e.Response)
