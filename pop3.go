@@ -1,3 +1,4 @@
+// Package pop3 provides an implementation of the Post Office Protocol - Version 3.
 package pop3
 
 import (
@@ -234,7 +235,7 @@ func (c *Client) Stat() (count, size int, err error) {
 
 		return
 	}
-	if count < 1 {
+	if count == 0 {
 
 		return
 	}
@@ -245,7 +246,7 @@ func (c *Client) Stat() (count, size int, err error) {
 
 		return
 	}
-	if size < 1 {
+	if size == 0 {
 
 		return
 	}
