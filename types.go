@@ -5,6 +5,7 @@ import (
 	"net"
 )
 
+// Client holds the net conn and read/write buffer objects.
 type Client struct {
 
 	// Net Conn
@@ -17,6 +18,7 @@ type Client struct {
 	w *bufio.Writer
 }
 
+// MessageList represents the metadata returned by the server for a message stored in the maildrop.
 type MessageList struct {
 
 	// Non unique id reported by the server
@@ -26,6 +28,7 @@ type MessageList struct {
 	Size int
 }
 
+// MessageUidl represents the metadata returned by the server for a message stored in the maildrop.
 type MessageUidl struct {
 
 	// Non unique id reported by the server

@@ -13,6 +13,7 @@ import (
 	"strings"
 )
 
+// Errors
 var (
 	ErrServerNotReady = errors.New("Server did not respond with +OK on the initial connection")
 	ErrBadCommand     = errors.New("Server did not respond with +OK after sending a command")
