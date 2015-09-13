@@ -89,18 +89,12 @@ func (c *Client) Send(format string, args ...interface{}) (err error) {
 	if err != nil {
 		return
 	}
-
-	err = c.w.Flush()
-	if err != nil {
-		return
-	}
-	return
+	return c.w.Flush()
 }
 
 // Cmd sends a command to the server and returns a single line from the buffer.
 func (c *Client) Cmd(format string, args ...interface{}) (line string, err error) {
-	err = c.Send(format, args...)
-	if err != nil {
+	if err = c.Send(format, args...); err != nil {
 		return
 	}
 
@@ -116,8 +110,7 @@ func (c *Client) Cmd(format string, args ...interface{}) (line string, err error
 
 // User sends the username to the server.
 func (c *Client) User(u string) (err error) {
-	_, err = c.Cmd("%s %s\r\n", USER, u)
-	if err != nil {
+	if _, err = c.Cmd("%s %s\r\n", USER, u); err != nil {
 		return
 	}
 	return
@@ -125,8 +118,7 @@ func (c *Client) User(u string) (err error) {
 
 // Pass sends the password to the server.
 func (c *Client) Pass(p string) (err error) {
-	_, err = c.Cmd("%s %s\r\n", PASS, p)
-	if err != nil {
+	if _, err = c.Cmd("%s %s\r\n", PASS, p); err != nil {
 		return
 	}
 	return
@@ -134,8 +126,7 @@ func (c *Client) Pass(p string) (err error) {
 
 // Quit sends the quit command to the server and closes the socket.
 func (c *Client) Quit() (err error) {
-	err = c.Send("%s\r\n", QUIT)
-	if err != nil {
+	if err = c.Send("%s\r\n", QUIT); err != nil {
 		return
 	}
 	return c.conn.Close()
@@ -145,13 +136,11 @@ func (c *Client) Quit() (err error) {
 // Pass methods. Noop is also called incase the server does not respond
 // with invalid auth.
 func (c *Client) Auth(u, p string) (err error) {
-	err = c.User(u)
-	if err != nil {
+	if err = c.User(u); err != nil {
 		return
 	}
 
-	err = c.Pass(p)
-	if err != nil {
+	if err = c.Pass(p); err != nil {
 		return
 	}
 
@@ -211,8 +200,7 @@ func (c *Client) List(msg int) (list MessageList, err error) {
 // ListAll returns a MessageList object which contains all messages in the
 // maildrop.
 func (c *Client) ListAll() (list []MessageList, err error) {
-	_, err = c.Cmd("%s\r\n", LIST)
-	if err != nil {
+	if _, err = c.Cmd("%s\r\n", LIST); err != nil {
 		return
 	}
 
@@ -237,8 +225,7 @@ func (c *Client) ListAll() (list []MessageList, err error) {
 
 // Retr downloads the given message and returns it as a mail.Message object.
 func (c *Client) Retr(msg int) (m *mail.Message, err error) {
-	_, err = c.Cmd("%s %s\r\n", RETR, msg)
-	if err != nil {
+	if _, err = c.Cmd("%s %s\r\n", RETR, msg); err != nil {
 		return
 	}
 
@@ -266,8 +253,7 @@ func (c *Client) Retr(msg int) (m *mail.Message, err error) {
 // Dele will delete the given message from the maildrop.
 // Changes will only take affect after the Quit command is issued.
 func (c *Client) Dele(msg int) (err error) {
-	_, err = c.Cmd("%s %s\r\n", DELE, msg)
-	if err != nil {
+	if _, err = c.Cmd("%s %s\r\n", DELE, msg); err != nil {
 		return
 	}
 	return
@@ -275,8 +261,7 @@ func (c *Client) Dele(msg int) (err error) {
 
 // Noop will do nothing however can prolong the end of a connection.
 func (c *Client) Noop() (err error) {
-	_, err = c.Cmd("%s\r\n", NOOP)
-	if err != nil {
+	if _, err = c.Cmd("%s\r\n", NOOP); err != nil {
 		return
 	}
 	return
@@ -285,8 +270,7 @@ func (c *Client) Noop() (err error) {
 // Rset will unmark any messages that have being marked for deletion in
 // the current session.
 func (c *Client) Rset() (err error) {
-	_, err = c.Cmd("%s\r\n", RSET)
-	if err != nil {
+	if _, err = c.Cmd("%s\r\n", RSET); err != nil {
 		return
 	}
 	return
@@ -295,8 +279,7 @@ func (c *Client) Rset() (err error) {
 // Top will return a varible number of lines for a given message as a
 // mail.Message object.
 func (c *Client) Top(msg int, n int) (m *mail.Message, err error) {
-	_, err = c.Cmd("%s %d %d\r\n", TOP, msg, n)
-	if err != nil {
+	if _, err = c.Cmd("%s %d %d\r\n", TOP, msg, n); err != nil {
 		return
 	}
 
@@ -314,8 +297,7 @@ func (c *Client) Top(msg int, n int) (m *mail.Message, err error) {
 		return
 	}
 	if line != "." {
-		err = c.r.UnreadByte()
-		if err != nil {
+		if err = c.r.UnreadByte(); err != nil {
 			return
 		}
 	}
@@ -340,8 +322,7 @@ func (c *Client) Uidl(msg int) (list MessageUidl, err error) {
 // UidlAll will return a MessageUidl object which contains all messages in
 // the maildrop.
 func (c *Client) UidlAll() (list []MessageUidl, err error) {
-	_, err = c.Cmd("%s\r\n", UIDL)
-	if err != nil {
+	if _, err = c.Cmd("%s\r\n", UIDL); err != nil {
 		return
 	}
 
