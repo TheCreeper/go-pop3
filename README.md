@@ -13,6 +13,7 @@ c, err := pop3.DialTLS("pop3.riseup.net:993")
 if err != nil {
 	log.Fatal(err)
 }
+defer c.Quit()
 
 // Authenticate with the server
 if err = c.Auth("username", "password"); err != nil {
@@ -26,10 +27,5 @@ if err != nil {
 }
 for _, v := range messages {
 	log.Print(v.UID)
-}
-
-// Send the QUIT command and close the connection
-if err = c.Quit(); err != nil {
-	log.Fatal(err)
 }
 ```
