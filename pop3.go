@@ -241,8 +241,7 @@ func (c *Client) Retr(msg int) (m *mail.Message, err error) {
 		return
 	}
 	if line != "." {
-		err = c.r.UnreadByte()
-		if err != nil {
+		if err = c.r.UnreadByte(); err != nil {
 			return
 		}
 	}
