@@ -8,44 +8,28 @@ Package pop3 provides an implementation of the [Post Office Protocol - Version 3
 ## Example
 
 ```
-package main
+// Create a connection to the server
+c, err := pop3.DialTLS("pop3.riseup.net:993")
+if err != nil {
+	log.Fatal(err)
+}
 
-import (
-	"log"
+// Authenticate with the server
+if err = c.Auth("username", "password"); err != nil {
+	log.Fatal(err)
+}
 
-	"github.com/TheCreeper/go-pop3"
-)
+// Print the UID of all messages in the maildrop
+messages, err := c.UidlAll()
+if err != nil {
+	log.Fatal(err)
+}
+for _, v := range messages {
+	log.Print(v.UID)
+}
 
-func main() {
-
-	// Create a connection to the server
-	c, err := pop3.DialTLS("pop3.riseup.net:993")
-	if err != nil {
-
-		log.Fatal(err)
-	}
-
-	// Authenticate with the server
-	if err = c.Auth("username", "password"); err != nil {
-
-		log.Fatal(err)
-	}
-
-	// Print the UID of all messages in the maildrop
-	messages, err := c.UidlAll()
-	if err != nil {
-
-		log.Fatal(err)
-	}
-	for _, v := range messages {
-
-		log.Print(v.UID)
-	}
-
-	// Send the QUIT command and close the connection
-	if err = c.Quit(); err != nil {
-
-		log.Fatal(err)
-	}
+// Send the QUIT command and close the connection
+if err = c.Quit(); err != nil {
+	log.Fatal(err)
 }
 ```
