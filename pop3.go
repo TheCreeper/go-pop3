@@ -85,8 +85,7 @@ func (c *Client) ReadLines() (lines []string, err error) {
 // Send writes a command to the buffer and flushes it. Does not return any
 // lines from the buffer.
 func (c *Client) Send(format string, args ...interface{}) (err error) {
-	_, err = c.w.WriteString(fmt.Sprintf(format, args...))
-	if err != nil {
+	if _, err = c.w.WriteString(fmt.Sprintf(format, args...)); err != nil {
 		return
 	}
 	return c.w.Flush()
