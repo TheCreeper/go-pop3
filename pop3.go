@@ -46,7 +46,7 @@ func NewClient(conn net.Conn) (c *Client, err error) {
 		return
 	}
 	if !IsOK(line) {
-		return nil, errors.New("pop3: Server did not respond with +OK on the initial connection")
+		return nil, errors.New("pop3: Server did not respond with +OK")
 	}
 	return
 }
@@ -92,7 +92,8 @@ func (c *Client) Send(format string, args ...interface{}) (err error) {
 }
 
 // Cmd sends a command to the server and returns a single line from the buffer.
-func (c *Client) Cmd(format string, args ...interface{}) (line string, err error) {
+func (c *Client) Cmd(format string,
+	args ...interface{}) (line string, err error) {
 	if err = c.Send(format, args...); err != nil {
 		return
 	}
@@ -102,7 +103,7 @@ func (c *Client) Cmd(format string, args ...interface{}) (line string, err error
 		return
 	}
 	if !IsOK(line) {
-		return "", errors.New("pop3: Server did not respond with +OK after sending a command")
+		return "", errors.New("pop3: Server did not respond with +OK")
 	}
 	return
 }
