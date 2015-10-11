@@ -2,7 +2,7 @@ package pop3
 
 import "strings"
 
-// IsOk checks to see if the reply from the server contains +OK.
+// IsOK checks to see if the reply from the server contains +OK.
 func IsOK(s string) bool {
 	if strings.Fields(s)[0] != OK {
 		return false

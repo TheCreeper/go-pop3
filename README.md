@@ -1,13 +1,13 @@
-go-pop3
-=====================
+# go-pop3
 
-[![go-pop3](https://godoc.org/github.com/TheCreeper/go-pop3?status.png)](http://godoc.org/github.com/TheCreeper/go-pop3)
+[![GoDoc](https://godoc.org/github.com/TheCreeper/go-pop3?status.svg)](https://godoc.org/github.com/TheCreeper/go-pop3)
 
-Package pop3 provides an implementation of the [Post Office Protocol - Version 3](https://www.ietf.org/rfc/rfc1939.txt).
+Package pop3 provides an implementation of the
+[Post Office Protocol - Version 3](https://www.ietf.org/rfc/rfc1939.txt).
 
 ## Example
 
-```
+```Go
 // Create a connection to the server
 c, err := pop3.DialTLS("pop3.riseup.net:993")
 if err != nil {

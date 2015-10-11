@@ -23,7 +23,7 @@ func Dial(address string) (c *Client, err error) {
 	return NewClient(conn)
 }
 
-// Dial connects to the address on the named network using tls.
+// DialTLS connects to the address on the named network using tls.
 func DialTLS(address string) (c *Client, err error) {
 	conn, err := tls.Dial("tcp", address, nil)
 	if err != nil {
@@ -46,7 +46,7 @@ func NewClient(conn net.Conn) (c *Client, err error) {
 		return
 	}
 	if !IsOK(line) {
-		return nil, errors.New("pop3: Server did not respond with +OK on the initial connection.")
+		return nil, errors.New("pop3: Server did not respond with +OK on the initial connection")
 	}
 	return
 }
@@ -102,7 +102,7 @@ func (c *Client) Cmd(format string, args ...interface{}) (line string, err error
 		return
 	}
 	if !IsOK(line) {
-		return "", errors.New("pop3: Server did not respond with +OK after sending a command.")
+		return "", errors.New("pop3: Server did not respond with +OK after sending a command")
 	}
 	return
 }
