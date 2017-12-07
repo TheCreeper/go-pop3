@@ -180,7 +180,7 @@ func (c *Client) Stat() (count, size int, err error) {
 // List returns the MessageList object which contains the message non unique
 // id and its size.
 func (c *Client) List(msg int) (list MessageList, err error) {
-	line, err := c.Cmd("%s %s\r\n", LIST, msg)
+	line, err := c.Cmd("%s %d\r\n", LIST, msg)
 	if err != nil {
 		return
 	}
@@ -225,7 +225,7 @@ func (c *Client) ListAll() (list []MessageList, err error) {
 
 // Retr downloads the given message and returns it as a mail.Message object.
 func (c *Client) Retr(msg int) (m *mail.Message, err error) {
-	if _, err = c.Cmd("%s %s\r\n", RETR, msg); err != nil {
+	if _, err = c.Cmd("%s %d\r\n", RETR, msg); err != nil {
 		return
 	}
 
@@ -252,7 +252,7 @@ func (c *Client) Retr(msg int) (m *mail.Message, err error) {
 // Dele will delete the given message from the maildrop.
 // Changes will only take affect after the Quit command is issued.
 func (c *Client) Dele(msg int) (err error) {
-	if _, err = c.Cmd("%s %s\r\n", DELE, msg); err != nil {
+	if _, err = c.Cmd("%s %d\r\n", DELE, msg); err != nil {
 		return
 	}
 	return
@@ -306,7 +306,7 @@ func (c *Client) Top(msg int, n int) (m *mail.Message, err error) {
 // Uidl will return a MessageUidl object which contains the message non
 // unique id and a unique id.
 func (c *Client) Uidl(msg int) (list MessageUidl, err error) {
-	line, err := c.Cmd("%s %s\r\n", UIDL, msg)
+	line, err := c.Cmd("%s %d\r\n", UIDL, msg)
 	if err != nil {
 		return
 	}
