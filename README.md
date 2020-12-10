@@ -1,6 +1,6 @@
 # go-pop3
 
-[![GoDoc](https://godoc.org/github.com/TheCreeper/go-pop3?status.svg)](https://godoc.org/github.com/TheCreeper/go-pop3)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/TheCreeper/go-pop3)](https://pkg.go.dev/github.com/TheCreeper/go-pop3)
 
 Package pop3 provides an implementation of the
 [Post Office Protocol - Version 3](https://www.ietf.org/rfc/rfc1939.txt).
