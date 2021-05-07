@@ -126,7 +126,7 @@ func (c *Client) Pass(p string) (err error) {
 
 // Quit sends the quit command to the server and closes the socket.
 func (c *Client) Quit() (err error) {
-	if err = c.Send("%s\r\n", QUIT); err != nil {
+	if _, err = c.Cmd("%s\r\n", QUIT); err != nil {
 		return
 	}
 	return c.conn.Close()
