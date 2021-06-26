@@ -5,7 +5,6 @@ package pop3
 import (
 	"bufio"
 	"crypto/tls"
-	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -45,8 +44,8 @@ func NewClient(conn net.Conn) (c *Client, err error) {
 	if err != nil {
 		return
 	}
-	if !IsOK(line) {
-		return nil, errors.New("pop3: Server did not respond with +OK")
+	if err := GetErr(line); err != nil {
+		return nil, err
 	}
 	return
 }
@@ -102,8 +101,8 @@ func (c *Client) Cmd(format string,
 	if err != nil {
 		return
 	}
-	if !IsOK(line) {
-		return "", errors.New("pop3: Server did not respond with +OK")
+	if err := GetErr(line); err != nil {
+		return "", err
 	}
 	return
 }

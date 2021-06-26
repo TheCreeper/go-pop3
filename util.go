@@ -1,6 +1,9 @@
 package pop3
 
-import "strings"
+import (
+	"errors"
+	"strings"
+)
 
 // IsOK checks to see if the reply from the server contains +OK.
 func IsOK(s string) bool {
@@ -16,4 +19,15 @@ func IsErr(s string) bool {
 		return false
 	}
 	return true
+}
+
+// GetErr checks the reply from the server and returns an error
+// if it's not an OK response.
+func GetErr(s string) error {
+	f := strings.Fields(s)
+	if f[0] != ERR {
+		return nil
+	}
+
+	return errors.New(strings.Join(f[1:], " "))
 }
