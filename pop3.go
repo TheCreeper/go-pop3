@@ -184,12 +184,14 @@ func (c *Client) List(msg int) (list MessageList, err error) {
 		return
 	}
 
-	id, err := strconv.Atoi(strings.Fields(line)[0])
+	f := strings.Fields(line)
+
+	id, err := strconv.Atoi(f[1])
 	if err != nil {
 		return
 	}
 
-	size, err := strconv.Atoi(strings.Fields(line)[1])
+	size, err := strconv.Atoi(f[2])
 	if err != nil {
 		return
 	}
